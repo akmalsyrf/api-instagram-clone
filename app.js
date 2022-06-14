@@ -2,19 +2,38 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const cors = require("cors");
+const session = require("express-session");
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+require("module-alias/register");
+require("dotenv").config();
 
 var app = express();
+const baseUrl = "/api/v1";
+
+//initialize passport using facebook strategy
+require("@service/FacebookService")(app)
+
+app.use(session({
+    resave: false,
+    saveUninitialized: false,
+    secret: 'SECRET'
+}));
 
 app.use(logger('dev'));
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+//import router
+const authRouter = require("./app/usecase/auth/router");
+
+//api
+app.use(baseUrl, authRouter);
+
+//not found
+app.use((req, res) => res.sendStatus(404));
 
 module.exports = app;
