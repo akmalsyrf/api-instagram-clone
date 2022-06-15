@@ -16,6 +16,14 @@ module.exports = {
           key: 'id'
         }
       },
+      post_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'posts',
+          key: 'id'
+        }
+      },
       comment: {
         type: Sequelize.TEXT
       },

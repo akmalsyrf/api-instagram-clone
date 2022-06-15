@@ -33,9 +33,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //import router
 const authRouter = require("./app/usecase/auth/router");
+const postRouter = require("./app/usecase/post/router");
 
 //api
 app.use(baseUrl, authRouter);
+app.use(baseUrl, postRouter);
 
 //not found
 app.use((_, res) => res.sendStatus(404));

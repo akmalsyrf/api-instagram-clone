@@ -11,6 +11,23 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      user.hasMany(models.post, {
+        foreignKey: {
+          name: 'user_id',
+        }
+      })
+      user.hasMany(models.chat, {
+        as: 'senderMessage',
+        foreignKey: {
+          name: 'id_sender',
+        }
+      })
+      user.hasMany(models.chat, {
+        as: 'recipientMessage',
+        foreignKey: {
+          name: 'id_recipient',
+        }
+      })
     }
   }
   user.init({

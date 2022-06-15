@@ -1,4 +1,4 @@
-const { user } = require("@models/user");
+const { user } = require("@models");
 
 const bcrypt = require("bcryptjs");
 const Joi = require("joi");
@@ -40,7 +40,10 @@ exports.register = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        let createUser = await user.create({ name, username, email, password: hashedPassword }, { attributes: { exlude: ["password"] } })
+        let createUser = await user.create(
+            { name, username, email, password: hashedPassword },
+            { attributes: { exclude: ["password"] } }
+        )
         createUser = JSON.parse(JSON.stringify(createUser))
         const dataToken = {
             id: createUser.id,
@@ -82,6 +85,7 @@ exports.login = async (req, res) => {
             where: {
                 email: email,
             },
+            attributes: { exclude: ["password"] }
         });
 
         if (!userExist) {
@@ -96,8 +100,7 @@ exports.login = async (req, res) => {
 
         if (!isValid) {
             return res.status(400).json({
-                success: false,
-                status: "error",
+                status: "failed",
                 message: "credential is invalid",
             });
         }
