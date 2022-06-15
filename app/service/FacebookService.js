@@ -29,35 +29,31 @@ module.exports = function (app) {
                 // console.log("fb profile", profile);
                 console.log("fb id", profile.id);
                 try {
-                    // let userExist = await user.findOne({
-                    //     where: { fb_id: profile.id },
-                    //     include: { model: customer }
-                    // })
-                    // userExist = JSON.parse(JSON.stringify(userExist));
+                    let userExist = await user.findOne({
+                        where: { fb_id: profile.id },
+                    })
+                    userExist = JSON.parse(JSON.stringify(userExist));
 
-                    // if (!userExist) {
-                    //     const salt = await bcrypt.genSalt(10);
-                    //     const hashedPassword = await bcrypt.hash("123456", salt);
+                    if (!userExist) {
+                        const salt = await bcrypt.genSalt(10);
+                        const hashedPassword = await bcrypt.hash("123456", salt);
 
-                    //     let newUser = await user.create({
-                    //         fb_id: profile.id,
-                    //         // email: profile.emails[0]?.value,
-                    //         email: profile.provider,
-                    //         name: profile.displayName,
-                    //         username: profile.displayName,
-                    //         password: hashedPassword,
-                    //         email_verified_at: fn("now")
-                    //     }, { attributes: { exclude: ["password"] } });
-                    //     newUser = JSON.parse(JSON.stringify(newUser));
+                        let newUser = await user.create({
+                            fb_id: profile.id,
+                            email: profile.provider,
+                            name: profile.displayName,
+                            username: profile.displayName,
+                            password: hashedPassword,
+                            email_verified_at: fn("now")
+                        }, { attributes: { exclude: ["password"] } });
+                        newUser = JSON.parse(JSON.stringify(newUser));
 
-                    //     let newCustomer = await customer.create({});
-                    //     newCustomer = JSON.parse(JSON.stringify(newCustomer));
-
-                    //     return done(null, { newUser, newCustomer });
-                    // } else {
-                    //     return done(null, userExist);
-                    // }
+                        return done(null, { newUser });
+                    } else {
+                        return done(null, userExist);
+                    }
                 } catch (error) {
+                    done(error);
                     throw error.message
                 }
             }

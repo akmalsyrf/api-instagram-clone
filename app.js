@@ -11,14 +11,18 @@ require("dotenv").config();
 var app = express();
 const baseUrl = "/api/v1";
 
-//initialize passport using facebook strategy
-require("@service/FacebookService")(app)
-
 app.use(session({
     resave: false,
     saveUninitialized: false,
     secret: 'SECRET'
 }));
+
+//initialize passport using facebook strategy
+require("@service/FacebookService")(app)
+
+//websocket server
+const io = require("@service/WebsocketService")(app)
+require("./app/usecase/chat/controller")(io);
 
 app.use(logger('dev'));
 app.use(cors());
@@ -34,6 +38,6 @@ const authRouter = require("./app/usecase/auth/router");
 app.use(baseUrl, authRouter);
 
 //not found
-app.use((req, res) => res.sendStatus(404));
+app.use((_, res) => res.sendStatus(404));
 
 module.exports = app;

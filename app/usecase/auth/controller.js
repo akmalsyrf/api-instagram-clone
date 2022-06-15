@@ -2,6 +2,7 @@ const { user } = require("@models/user");
 
 const bcrypt = require("bcryptjs");
 const Joi = require("joi");
+const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
     const schema = Joi.object({
@@ -124,11 +125,14 @@ exports.login = async (req, res) => {
 exports.facebookLogin = async (req, res) => {
     if (req.isAuthenticated()) {
         const { id, fb_id, name, username, email, email_verified_at } = req.user
+        const dataToken = {
+            id, username
+        };
+        const token = jwt.sign(dataToken, process.env.TOKEN_API);
         res.status(200).json({
-            success: true,
             status: "success",
             message: "Success login with facebook",
-            data: { id, fb_id, name, username, email, email_verified_at }
+            data: { token, user: { id, fb_id, name, username, email, email_verified_at } }
         });
     } else {
         res.status(401).json({
