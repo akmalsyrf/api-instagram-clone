@@ -13,12 +13,12 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       comment.belongsTo(models.user, {
         foreignKey: {
-          name: "id_user",
+          name: "user_id",
         }
       })
       comment.belongsTo(models.post, {
         foreignKey: {
-          name: "id_post",
+          name: "post_id",
         }
       })
     }

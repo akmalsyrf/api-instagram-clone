@@ -81,12 +81,12 @@ exports.login = async (req, res) => {
     try {
         const { email, password } = req.body
 
-        const userExist = await user.findOne({
+        let userExist = await user.findOne({
             where: {
                 email: email,
             },
-            attributes: { exclude: ["password"] }
         });
+        userExist = JSON.parse(JSON.stringify(userExist))
 
         if (!userExist) {
             return res.status(400).json({
@@ -95,6 +95,7 @@ exports.login = async (req, res) => {
                 message: "user doesn't exist",
             });
         }
+        console.log(password);
 
         const isValid = await bcrypt.compare(password, userExist.password);
 
@@ -142,6 +143,26 @@ exports.facebookLogin = async (req, res) => {
             status: "failed",
             success: false,
             message: "Unauthorized"
+        });
+    }
+}
+
+exports.editProfile = async (req, res) => {
+    try {
+        const { email, name, username, password, images_profile } = req.body
+        let updateUser = await user.update({ email, name, username, password, images_profile }, { where: { id: req.user.id } })
+        updateUser = JSON.parse(JSON.stringify(updateUser))
+
+        res.status(200).json({
+            status: "success",
+            message: "user updated",
+            data: { user: updateUser }
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            status: "failed",
+            message: error.message,
         });
     }
 }
