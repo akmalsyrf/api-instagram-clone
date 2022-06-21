@@ -22,6 +22,11 @@ require("@service/FacebookService")(app)
 
 //websocket server
 const io = require("@service/WebsocketService")(app)
+const socketPort = process.env.SOCKET_PORT;
+io.listen(socketPort);
+console.log(`Socket io server started on port ${socketPort}`);
+
+//socket controller
 require("./app/usecase/chat/controller")(io);
 
 app.use(logger('dev'));
