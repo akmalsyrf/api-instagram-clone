@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
     const schema = Joi.object({
-        name: Joi.string().required(),
+        // name: Joi.string().required(),
         username: Joi.string().required(),
         email: Joi.string().min(6).email().required(),
         password: Joi.string().min(5).required(),
@@ -41,7 +41,7 @@ exports.register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         let createUser = await user.create(
-            { name, username, email, password: hashedPassword },
+            { name: username, username, email, password: hashedPassword },
             { attributes: { exclude: ["password"] } }
         )
         createUser = JSON.parse(JSON.stringify(createUser))
@@ -117,6 +117,31 @@ exports.login = async (req, res) => {
             data: { token, user: userExist }
         })
 
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            status: "failed",
+            message: error.message,
+        });
+    }
+}
+
+exports.checkAuth = async (req, res) => {
+    try {
+        const id = req.users.id;
+        let data = user.findOne({ where: { id } }, { attributes: { exclude: ["password"] } })
+        data = JSON.parse(JSON.stringify)
+        if (!data) {
+            return res.status(404).send({
+                status: "failed",
+            });
+        }
+
+        res.status(200).json({
+            status: "success",
+            message: "user logged in",
+            data: { user: data }
+        })
     } catch (error) {
         console.log(error);
         res.status(500).json({
