@@ -1,18 +1,23 @@
 const { user, chat } = require("@models");
-const jwt = require("jsonwebtoken");
 const { Op } = require("sequelize");
+const jwt = require("jsonwebtoken");
 
 let connectedUser = {};
 const socketIo = (io) => {
     // create middlewares before connection event
     // to prevent client access socket server without token
-    // io.use((socket, next) => {
-    //     if (socket.handshake.auth && socket.handshake.auth.token) {
-    //         next();
-    //     } else {
-    //         next(new Error("Not Authorized"));
-    //     }
-    // });
+    io.use((socket, next) => {
+        if (socket.handshake.headers && socket.handshake.headers.token) {
+            const verified = jwt.verify(socket.handshake.headers.token, process.env.TOKEN_API);
+            if (verified) {
+                next();
+            } else {
+                next(new Error("Not Authorized"));
+            }
+        } else {
+            next(new Error("Not Authorized"));
+        }
+    });
 
     io.on("connection", async (socket) => {
         console.log("client connect: ", socket.id);

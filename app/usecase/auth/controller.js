@@ -42,7 +42,7 @@ exports.register = async (req, res) => {
 
         let createUser = await user.create(
             { name: username, username, email, password: hashedPassword },
-            { attributes: { exclude: ["password"] } }
+            { attributes: { exclude: ["password"] } },
         )
         createUser = JSON.parse(JSON.stringify(createUser))
         const dataToken = {

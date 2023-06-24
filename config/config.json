@@ -1,27 +1,27 @@
 {
-	"development": {
-		"username": "root",
-		"password": null,
-		"database": "instagram_clone",
-		"host": "127.0.0.1",
-		"dialect": "mysql",
-		"define": {
-			"charset": "utf8mb4",
-			"collate": "utf8mb4_general_ci"
-		}
-	},
-	"test": {
-		"username": "root",
-		"password": null,
-		"database": "database_test",
-		"host": "127.0.0.1",
-		"dialect": "mysql"
-	},
-	"production": {
-		"username": "root",
-		"password": null,
-		"database": "database_production",
-		"host": "127.0.0.1",
-		"dialect": "mysql"
-	}
+  "development": {
+    "username": "postgres",
+    "password": "password",
+    "database": "instagram_clone",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "define": {
+      "charset": "utf8mb4",
+      "collate": "utf8mb4_general_ci"
+    }
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
 }

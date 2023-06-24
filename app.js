@@ -30,10 +30,10 @@ console.log(`Socket io server listening on port ${socketPort}`);
 require("./app/usecase/chat/controller")(io); //chat
 
 // const proxy = require("express-http-proxy")
-// app.use("/*", proxy('http://localhost:19006'))
+// app.use("/*", proxy(process.env.CLIENT_URL ?? 'http://localhost:19006'))
 
 app.use(logger('dev'));
-app.use(cors({ origin: 'http://localhost:19006', credentials: true, methods: 'GET,PUT,POST,OPTIONS', allowedHeaders: 'Content-Type,Authorization' }));
+app.use(cors({ origin: process.env.CLIENT_URL ?? 'http://localhost:19006', credentials: true, methods: 'GET,PUT,POST,OPTIONS', allowedHeaders: 'Content-Type,Authorization' }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

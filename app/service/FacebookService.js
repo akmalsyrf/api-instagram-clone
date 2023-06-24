@@ -23,7 +23,7 @@ module.exports = function (app) {
             {
                 clientID: process.env.FB_API_KEY,
                 clientSecret: process.env.FB_API_SECRET,
-                callbackURL: process.env.CALLBACK_FB_API,
+                callbackURL: `${process.env.BASE_URL}/facebookLogin`,
             },
             async function (accessToken, refreshToken, profile, done) {
                 // console.log("fb profile", profile);
