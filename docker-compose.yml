@@ -1,0 +1,32 @@
+version: "3.7"
+services:
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    container_name: postgres
+    hostname: postgres
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: instagram_clone
+    restart: always
+    networks:
+      - app
+  app:
+    build: .
+    ports:
+      - 3000:3000
+      - 3021:3021
+    depends_on:
+      - postgres
+    environment:
+      WAIT_HOSTS: postgres:5432
+    networks:
+      - app
+networks:
+  app:
+volumes:
+  postgres:
